@@ -1,0 +1,10 @@
+[2023-07-27 17:58:59,376] root - INFO - ====================Data Ingestion log started.==================== 
+[2023-07-27 17:58:59,681] root - INFO - ====================Data spliting  started.==================== 
+[2023-07-27 17:58:59,695] root - INFO - ====================save the train data.==================== 
+[2023-07-27 17:58:59,947] root - INFO - ====================save the test data.==================== 
+[2023-07-27 17:59:00,026] root - INFO - data ingestion completed
+[2023-07-27 17:59:00,170] root - INFO - Optaining FE steps object
+[2023-07-27 17:59:00,170] root - INFO - ******************feature Engineering started******************
+[2023-07-27 17:59:00,186] root - INFO - droping columns from our original dataset
+[2023-07-27 17:59:00,192] root - INFO - droping columns from our original dataset
+[2023-07-27 17:59:00,425] root - INFO - Pipeline Steps Completed
