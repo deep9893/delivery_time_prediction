@@ -15,7 +15,6 @@ import re
 import sys
 
 from .errors import DistutilsPlatformError
-from .util import get_platform, get_host_platform
 
 # These are needed in a couple of spots, so just compute them once.
 PREFIX = os.path.normpath(sys.prefix)
@@ -146,8 +145,15 @@ def get_python_lib(plat_specific=0, standard_lib=0, prefix=None):
             prefix = plat_specific and EXEC_PREFIX or PREFIX
 
     if os.name == "posix":
-        libpython = os.path.join(prefix,
-                                 "lib", "python" + get_python_version())
+        if plat_specific or standard_lib:
+            # Platform-specific modules (any module from a non-pure-Python
+            # module distribution) or standard Python library modules.
+            libdir = sys.platlibdir
+        else:
+            # Pure Python
+            libdir = "lib"
+        libpython = os.path.join(prefix, libdir,
+                                 "python" + get_python_version())
         if standard_lib:
             return libpython
         else:
@@ -222,7 +228,7 @@ def customize_compiler(compiler):
             archiver = ar + ' ' + os.environ['ARFLAGS']
         else:
             archiver = ar + ' ' + ar_flags
-        
+
         cc_cmd = cc + ' ' + cflags
         compiler.set_executables(
             preprocessor=cpp,
@@ -235,7 +241,7 @@ def customize_compiler(compiler):
 
         if 'RANLIB' in os.environ and 'ranlib' in compiler.executables:
             compiler.set_executables(ranlib=os.environ['RANLIB'])
-
+            
         compiler.shared_lib_extension = shlib_suffix
 
 

@@ -18,9 +18,10 @@ Functions:
                           seconds past the Epoch (the time values
                           returned from time.time())
 
-  fetch_server_certificate (HOST, PORT) -- fetch the certificate provided
-                          by the server running on HOST at port PORT.  No
-                          validation of the certificate is performed.
+  get_server_certificate (addr, ssl_version, ca_certs, timeout) -- Retrieve the
+                          certificate from the server at the specified
+                          address and return it as a PEM-encoded string
+
 
 Integer constants:
 
@@ -252,7 +253,7 @@ class _TLSMessageType(_IntEnum):
 if sys.platform == "win32":
     from _ssl import enum_certificates, enum_crls
 
-from socket import socket, AF_INET, SOCK_STREAM, create_connection
+from socket import socket, SOCK_STREAM, create_connection
 from socket import SOL_SOCKET, SO_TYPE
 import socket as _socket
 import base64        # for DER-to-PEM translation

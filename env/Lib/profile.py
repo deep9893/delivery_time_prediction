@@ -24,7 +24,6 @@
 # governing permissions and limitations under the License.
 
 
-import io
 import sys
 import time
 import marshal
@@ -426,29 +425,13 @@ class Profile:
         return self
 
     # This method is more useful to profile a single function call.
-    def runcall(*args, **kw):
-        if len(args) >= 2:
-            self, func, *args = args
-        elif not args:
-            raise TypeError("descriptor 'runcall' of 'Profile' object "
-                            "needs an argument")
-        elif 'func' in kw:
-            func = kw.pop('func')
-            self, *args = args
-            import warnings
-            warnings.warn("Passing 'func' as keyword argument is deprecated",
-                          DeprecationWarning, stacklevel=2)
-        else:
-            raise TypeError('runcall expected at least 1 positional argument, '
-                            'got %d' % (len(args)-1))
-
+    def runcall(self, func, /, *args, **kw):
         self.set_cmd(repr(func))
         sys.setprofile(self.dispatcher)
         try:
             return func(*args, **kw)
         finally:
             sys.setprofile(None)
-    runcall.__text_signature__ = '($self, func, /, *args, **kw)'
 
 
     #******************************************************************
@@ -604,7 +587,7 @@ def main():
         else:
             progname = args[0]
             sys.path.insert(0, os.path.dirname(progname))
-            with io.open_code(progname) as fp:
+            with open(progname, 'rb') as fp:
                 code = compile(fp.read(), progname, 'exec')
             globs = {
                 '__file__': progname,

@@ -25,14 +25,11 @@ currently not entirely compliant with this RFC due to defacto
 scenarios for parsing, and for backward compatibility purposes, some
 parsing quirks from older RFCs are retained. The testcases in
 test_urlparse.py provides a good indicator of parsing behavior.
-
-The WHATWG URL Parser spec should also be considered.  We are not compliant with
-it either due to existing user code API behavior expectations (Hyrum's Law).
-It serves as a useful guide when making changes.
 """
 
 import re
 import sys
+import types
 import collections
 import warnings
 
@@ -80,10 +77,6 @@ scheme_chars = ('abcdefghijklmnopqrstuvwxyz'
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                 '0123456789'
                 '+-.')
-
-# Leading and trailing C0 control and space to be stripped per WHATWG spec.
-# == "".join([chr(i) for i in range(0, 0x20 + 1)])
-_WHATWG_C0_CONTROL_OR_SPACE = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f '
 
 # Unsafe bytes to be removed per WHATWG spec
 _UNSAFE_URL_BYTES_TO_REMOVE = ['\t', '\r', '\n']
@@ -186,6 +179,8 @@ class _NetlocResultMixinBase(object):
             if not ( 0 <= port <= 65535):
                 raise ValueError("Port out of range 0-65535")
         return port
+
+    __class_getitem__ = classmethod(types.GenericAlias)
 
 
 class _NetlocResultMixinStr(_NetlocResultMixinBase, _ResultMixinStr):
@@ -377,9 +372,23 @@ del _fix_result_transcoding
 def urlparse(url, scheme='', allow_fragments=True):
     """Parse a URL into 6 components:
     <scheme>://<netloc>/<path>;<params>?<query>#<fragment>
-    Return a 6-tuple: (scheme, netloc, path, params, query, fragment).
-    Note that we don't break the components up in smaller bits
-    (e.g. netloc is a single string) and we don't expand % escapes."""
+
+    The result is a named 6-tuple with fields corresponding to the
+    above. It is either a ParseResult or ParseResultBytes object,
+    depending on the type of the url parameter.
+
+    The username, password, hostname, and port sub-components of netloc
+    can also be accessed as attributes of the returned object.
+
+    The scheme argument provides the default value of the scheme
+    component when no scheme is found in url.
+
+    If allow_fragments is False, no attempt is made to separate the
+    fragment component from the previous component, which can be either
+    path or query.
+
+    Note that % escapes are not expanded.
+    """
     url, scheme, _coerce_result = _coerce_args(url, scheme)
     splitresult = urlsplit(url, scheme, allow_fragments)
     scheme, netloc, url, query, fragment = splitresult
@@ -425,24 +434,33 @@ def _checknetloc(netloc):
             raise ValueError("netloc '" + netloc + "' contains invalid " +
                              "characters under NFKC normalization")
 
-def _remove_unsafe_bytes_from_url(url):
-    for b in _UNSAFE_URL_BYTES_TO_REMOVE:
-        url = url.replace(b, "")
-    return url
-
 def urlsplit(url, scheme='', allow_fragments=True):
     """Parse a URL into 5 components:
     <scheme>://<netloc>/<path>?<query>#<fragment>
-    Return a 5-tuple: (scheme, netloc, path, query, fragment).
-    Note that we don't break the components up in smaller bits
-    (e.g. netloc is a single string) and we don't expand % escapes."""
+
+    The result is a named 5-tuple with fields corresponding to the
+    above. It is either a SplitResult or SplitResultBytes object,
+    depending on the type of the url parameter.
+
+    The username, password, hostname, and port sub-components of netloc
+    can also be accessed as attributes of the returned object.
+
+    The scheme argument provides the default value of the scheme
+    component when no scheme is found in url.
+
+    If allow_fragments is False, no attempt is made to separate the
+    fragment component from the previous component, which can be either
+    path or query.
+
+    Note that % escapes are not expanded.
+    """
+
     url, scheme, _coerce_result = _coerce_args(url, scheme)
-    url = _remove_unsafe_bytes_from_url(url)
-    scheme = _remove_unsafe_bytes_from_url(scheme)
-    # Only lstrip url as some applications rely on preserving trailing space.
-    # (https://url.spec.whatwg.org/#concept-basic-url-parser would strip both)
-    url = url.lstrip(_WHATWG_C0_CONTROL_OR_SPACE)
-    scheme = scheme.strip(_WHATWG_C0_CONTROL_OR_SPACE)
+
+    for b in _UNSAFE_URL_BYTES_TO_REMOVE:
+        url = url.replace(b, "")
+        scheme = scheme.replace(b, "")
+
     allow_fragments = bool(allow_fragments)
     key = url, scheme, allow_fragments, type(url), type(scheme)
     cached = _parse_cache.get(key, None)
@@ -453,31 +471,11 @@ def urlsplit(url, scheme='', allow_fragments=True):
     netloc = query = fragment = ''
     i = url.find(':')
     if i > 0:
-        if url[:i] == 'http': # optimize the common case
-            url = url[i+1:]
-            if url[:2] == '//':
-                netloc, url = _splitnetloc(url, 2)
-                if (('[' in netloc and ']' not in netloc) or
-                        (']' in netloc and '[' not in netloc)):
-                    raise ValueError("Invalid IPv6 URL")
-            if allow_fragments and '#' in url:
-                url, fragment = url.split('#', 1)
-            if '?' in url:
-                url, query = url.split('?', 1)
-            _checknetloc(netloc)
-            v = SplitResult('http', netloc, url, query, fragment)
-            _parse_cache[key] = v
-            return _coerce_result(v)
         for c in url[:i]:
             if c not in scheme_chars:
                 break
         else:
-            # make sure "url" is not actually a port number (in which case
-            # "scheme" is really part of the path)
-            rest = url[i+1:]
-            if not rest or any(c not in '0123456789' for c in rest):
-                # not a port number
-                scheme, url = url[:i].lower(), rest
+            scheme, url = url[:i].lower(), url[i+1:]
 
     if url[:2] == '//':
         netloc, url = _splitnetloc(url, 2)
@@ -654,7 +652,7 @@ def unquote(string, encoding='utf-8', errors='replace'):
     unquote('abc%20def') -> 'abc def'.
     """
     if isinstance(string, bytes):
-        raise TypeError('Expected str, got bytes')
+        return unquote_to_bytes(string).decode(encoding, errors)
     if '%' not in string:
         string.split
         return string

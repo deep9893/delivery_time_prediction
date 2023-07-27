@@ -82,7 +82,7 @@ def resolve_bases(bases):
     updated = False
     shift = 0
     for i, base in enumerate(bases):
-        if isinstance(base, type):
+        if isinstance(base, type) and not isinstance(base, GenericAlias):
             continue
         if not hasattr(base, "__mro_entries__"):
             continue
@@ -291,6 +291,9 @@ def coroutine(func):
         return coro
 
     return wrapped
+
+
+GenericAlias = type(list[int])
 
 
 __all__ = [n for n in globals() if n[:1] != '_']

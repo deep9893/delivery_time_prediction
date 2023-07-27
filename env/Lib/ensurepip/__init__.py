@@ -1,16 +1,18 @@
 import os
 import os.path
-import pkgutil
 import sys
 import runpy
 import tempfile
 import subprocess
+from importlib import resources
+
+from . import _bundled
+
 
 
 __all__ = ["version", "bootstrap"]
-_PACKAGE_NAMES = ('setuptools', 'pip')
-_SETUPTOOLS_VERSION = "56.0.0"
-_PIP_VERSION = "23.0.1"
+_SETUPTOOLS_VERSION = "58.1.0"
+_PIP_VERSION = "22.0.4"
 _PROJECTS = [
     ("setuptools", _SETUPTOOLS_VERSION, "py3"),
     ("pip", _PIP_VERSION, "py3"),
@@ -105,9 +107,9 @@ def _bootstrap(*, root=None, upgrade=False, user=False,
         additional_paths = []
         for project, version, py_tag in _PROJECTS:
             wheel_name = "{}-{}-{}-none-any.whl".format(project, version, py_tag)
-            whl = pkgutil.get_data(
-                "ensurepip",
-                "_bundled/{}".format(wheel_name),
+            whl = resources.read_binary(
+                _bundled,
+                wheel_name,
             )
             with open(os.path.join(tmpdir, wheel_name), "wb") as fp:
                 fp.write(whl)
