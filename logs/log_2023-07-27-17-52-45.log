@@ -1,5 +1,0 @@
-[2023-07-27 17:52:45,664] root - INFO - ====================Data Ingestion log started.==================== 
-[2023-07-27 17:52:45,925] root - INFO - ====================Data spliting  started.==================== 
-[2023-07-27 17:52:45,934] root - INFO - ====================save the train data.==================== 
-[2023-07-27 17:52:46,169] root - INFO - ====================save the test data.==================== 
-[2023-07-27 17:52:46,226] root - INFO - data ingestion completed

@@ -173,9 +173,11 @@ class DataTransformation:
             save_obj(file_path = self.data_transformation_config.feature_engg_obj_path,
                      obj = fe_obj)
             
+            logging.info("transformation Completed")
             return(train_arr,
                    test_arr,
                    self.data_transformation_config.proccessed_obj_file_path)
-        
+            
+
         except Exception as e:
             raise CustomException( e,sys)

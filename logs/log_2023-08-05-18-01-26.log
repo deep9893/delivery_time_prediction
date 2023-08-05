@@ -1,0 +1,13 @@
+[2023-08-05 18:01:26,739] root - INFO - ====================Data Ingestion log started.==================== 
+[2023-08-05 18:01:27,081] root - INFO - ====================Data spliting  started.==================== 
+[2023-08-05 18:01:27,092] root - INFO - ====================save the train data.==================== 
+[2023-08-05 18:01:27,355] root - INFO - ====================save the test data.==================== 
+[2023-08-05 18:01:27,427] root - INFO - data ingestion completed
+[2023-08-05 18:01:27,560] root - INFO - Optaining FE steps object
+[2023-08-05 18:01:27,560] root - INFO - ******************feature Engineering started******************
+[2023-08-05 18:01:27,572] root - INFO - droping columns from our original dataset
+[2023-08-05 18:01:27,577] root - INFO - droping columns from our original dataset
+[2023-08-05 18:01:27,789] root - INFO - Pipeline Steps Completed
+[2023-08-05 18:01:28,524] root - INFO - transformation Completed
+[2023-08-05 18:03:50,149] root - INFO - best model found , model name :XGBRegressor, r2 score : 0.7026781411625869
+[2023-08-05 18:03:50,181] root - INFO - Model Training completed

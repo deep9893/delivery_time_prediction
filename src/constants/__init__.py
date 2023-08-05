@@ -32,8 +32,10 @@ DATA_TRANSFORMTION_PROCESSING_OBJ = "processor.pkl"
 DATA_TRANSFORM_DIR = "transformation"
 TRANSFORM_TRAIN_DIR_KEY = "train.csv"
 TRANSFORM_TEST_DIR_KEY = "test.csv"
-#os.path.join(ROOT_DIR, ARTIFACT_DIR_KEY, DATA_TRANSFORMATION_ARTIFACT,
-       #                                  DATA_TRANSFORM_DIR)
 
-#
-# artifact / data_transformation / procceor->processor.pkl abnd transformation -> train.csv and test.csv
+
+# Model training
+
+MODEL_TRAINER_KEY = "model_trainer"
+MODEL_OBJECT = "model.pkl"
+
