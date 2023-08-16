@@ -1,0 +1,32 @@
+[2023-08-16 14:26:57,568] werkzeug - WARNING -  * Debugger is active!
+[2023-08-16 14:26:57,570] werkzeug - INFO -  * Debugger PIN: 485-290-410
+[2023-08-16 14:27:06,440] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:27:06] "GET /train HTTP/1.1" 200 -
+[2023-08-16 14:27:09,212] root - INFO - ====================Data Ingestion log started.==================== 
+[2023-08-16 14:27:09,799] root - INFO - ====================Data spliting  started.==================== 
+[2023-08-16 14:27:09,854] root - INFO - ====================save the train data.==================== 
+[2023-08-16 14:27:10,478] root - INFO - ====================save the test data.==================== 
+[2023-08-16 14:27:10,647] root - INFO - data ingestion completed
+[2023-08-16 14:27:10,911] root - INFO - Optaining FE steps object
+[2023-08-16 14:27:10,912] root - INFO - ******************feature Engineering started******************
+[2023-08-16 14:27:10,944] root - INFO - droping columns from our original dataset
+[2023-08-16 14:27:10,953] root - INFO - droping columns from our original dataset
+[2023-08-16 14:27:11,362] root - INFO - Pipeline Steps Completed
+[2023-08-16 14:27:12,965] root - INFO - transformation Completed
+[2023-08-16 14:30:11,411] root - INFO - best model found , model name :XGBRegressor, r2 score : 0.7026781411625869
+[2023-08-16 14:30:11,417] root - INFO - Model Training completed
+[2023-08-16 14:30:11,446] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:30:11] "POST /train HTTP/1.1" 200 -
+[2023-08-16 14:54:35,882] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:35] "GET /train HTTP/1.1" 200 -
+[2023-08-16 14:54:40,776] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:40] "GET /predict HTTP/1.1" 200 -
+[2023-08-16 14:54:59,099] root - INFO - exception occurred while saving an object
+[2023-08-16 14:54:59,099] root - INFO - error occurs in prediction pipeline
+[2023-08-16 14:54:59,115] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:59] "[35m[1mPOST /predict HTTP/1.1[0m" 500 -
+[2023-08-16 14:54:59,284] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:59] "[36mGET /predict?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+[2023-08-16 14:54:59,341] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:59] "[36mGET /predict?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+[2023-08-16 14:54:59,694] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:59] "[36mGET /predict?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+[2023-08-16 14:54:59,944] werkzeug - INFO - 127.0.0.1 - - [16/Aug/2023 14:54:59] "[36mGET /predict?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+[2023-08-16 14:59:02,481] werkzeug - INFO -  * Detected change in 'd:\\study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading
+[2023-08-16 14:59:02,481] werkzeug - INFO -  * Detected change in 'D:\\Study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading
+[2023-08-16 14:59:02,481] werkzeug - INFO -  * Detected change in 'd:\\study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading
+[2023-08-16 14:59:02,481] werkzeug - INFO -  * Detected change in 'D:\\Study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading
+[2023-08-16 14:59:02,481] werkzeug - INFO -  * Detected change in 'D:\\Study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading
+[2023-08-16 14:59:02,488] werkzeug - INFO -  * Detected change in 'd:\\study\\ml_pipeline\\delivery_time_prediction\\app.py', reloading

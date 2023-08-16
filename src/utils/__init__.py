@@ -35,4 +35,11 @@ def evaluate_model(X_train, y_train, X_test, y_test,models):
         logging.info("exception occurred while saving an object")
         raise CustomException(e, sys)       
             
-    
+
+def load_model(file_path):
+    try:
+        with open(file_path, 'r') as f:
+            return pickle.load(f)
+    except Exception as e:
+        logging.info("exception occurred while saving an object")
+        raise CustomException(e, sys) 
